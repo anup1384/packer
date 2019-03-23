@@ -1,0 +1,31 @@
+{
+"variables": {
+    "aws_access_key": "{{env `your access key`}}",
+    "aws_secret_key": "{{env `your secret key`}}"
+  },
+"builders":[
+{
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "region": "us-east-1",
+      "source_ami": "ami-0565af6e282977273",
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "packer_AWS-nginx"
+    }
+
+
+],
+"provisioners":[
+{
+  "type": "shell",
+  "inline": [
+    "sudo apt-get update",	  
+    "sudo apt-get install -y git",
+    "sudo apt-get install nginx -y",
+    "sudo service nginx restart"
+  ]
+}
+]
+}
