@@ -1,0 +1,22 @@
+---
+common_dependencies:
+  - git
+  - unzip
+  - python-pip
+  - awscli
+
+
+
+admins:
+    - username: anjali
+      groups: sudo
+      key_file: files/user_keys/anjali/id_rsa.pub
+    - username: gaurav
+      groups: sudo
+      key_file: files/user_keys/gaurav/id_rsa.pub
+
+## User Config
+nopass_group: sudo
+
+notify_email: anup.hnu@outlook.com
+

@@ -1,0 +1,55 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "region": "us-east-2",
+    "source_ami": "ami-0300d8d4f3862a8e3",
+    "ssh_username": "ubuntu"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key` }}",
+      "region": "{{ user `region` }}",
+      "source_ami": "{{ user `source_ami` }}",
+      "instance_type": "t2.small",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ami_name": "ami-app-{{timestamp}}",
+      "launch_block_device_mappings":[ {
+		"device_name": "/dev/sda1",
+		"volume_size": "20",
+		"volume_type": "gp2",
+		"delete_on_termination": true
+      }],
+      "tags": {
+	      	"Name": "ami-app-{{timestamp}}"
+      }
+    }
+  ],
+  "provisioners": [
+
+    {
+        "type": "shell",
+        "inline": [
+		"sudo apt-add-repository ppa:ansible/ansible -y",
+ 		"sudo apt-get update -y",
+ 		"sudo apt-get install ansible -y"
+        ]
+    }, 
+
+    {
+	    "type": "ansible-local",
+	    "playbook_file": "../ami.yml",
+  	    "role_paths": [
+                           "../roles/common",
+                           "../roles/java1.8"
+            ],
+	    "extra_arguments": [],
+	    "clean_staging_directory": true
+    }
+
+  ]
+}
+
+

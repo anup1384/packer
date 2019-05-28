@@ -1,0 +1,9 @@
+---
+- name: Install common dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+    force: yes
+    update_cache: yes
+  with_items: "{{ common_dependencies }}"
+

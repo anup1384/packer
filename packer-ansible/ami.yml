@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  become: yes
+  roles:
+    - common
+    - java1.8

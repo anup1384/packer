@@ -1,0 +1,23 @@
+---
+
+- name: Create Users on servers
+  user:
+    name: "{{ item.username }}"
+    groups: "{{ item.groups }}"
+    ssh_key_file: "/home/{{ item.username }}/.ssh/id_rsa"
+    shell: "{{item.shell | default('/bin/bash')}}"
+    append: no
+    home: "/home/{{ item.username }}"
+    remove: yes
+    state: "{{ item.state if item.state is defined else 'present' }}"
+  with_items:
+    - "{{admins}}"
+
+- name: Enabling Key based Access for the Users
+  authorized_key: user={{ item.username }} key="{{ lookup('file', item.key_file ) }}" state=present
+  when: item.state is not defined or item.state != "absent"
+  with_items:
+    - "{{admins}}"
+
+- name: Copy nopasswd file for sudo users
+  template: src=nopasswd.j2 dest=/etc/sudoers.d/nopasswd mode=0440
