@@ -1,0 +1,39 @@
+---
+
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: "yes"
+    update_cache: "yes"
+    cache_valid_time: 86400 #One day
+
+- name: Install required packages
+  apt: name={{ item }} state=present
+  with_items:
+  - curl
+  - python
+  - python-pip
+  - xfsprogs
+  - iftop
+  - awscli
+  tags:
+    - installdeps
+
+- name: Add Java repository to sources
+  action: apt_repository repo='ppa:webupd8team/java'
+
+- name: Automatically select the Oracle License
+  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+
+  #- name: Install JRE
+  #apt: pkg=oracle-java8-installer state=present force=yes
+
+- name: Install JRE
+  apt: pkg=openjdk-8-jre-headless state=present force=yes
+
+- name: Set Java 8 Env
+  action: apt name=openjdk-8-jre-headless state=latest install_recommends=yes
+
+  #- name: Create a symlink to default-java
+  #  file: src=/usr/lib/jvm/java-8-oracle dest=/usr/lib/jvm/default-java  owner=root group=root state=link
+

@@ -2,8 +2,8 @@
   "variables": {
     "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
     "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
-    "region": "us-east-2",
-    "source_ami": "ami-0300d8d4f3862a8e3",
+    "region": "ap-south-1",
+    "source_ami": "ami-0123b531fc646552f",
     "ssh_username": "ubuntu"
   },
   "builders": [
@@ -14,7 +14,7 @@
       "region": "{{ user `region` }}",
       "source_ami": "{{ user `source_ami` }}",
       "instance_type": "t2.small",
-      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_username": "{{ user `ssh_username`}}",
       "ami_name": "ami-app-{{timestamp}}",
       "launch_block_device_mappings":[ {
 		"device_name": "/dev/sda1",
